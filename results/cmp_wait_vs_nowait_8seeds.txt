@@ -1,0 +1,36 @@
+  done tdma L=1000 nll=None seed=0  0.0min
+  done tdma L=1000 nll=None seed=2  0.0min
+  done tdma L=1000 nll=None seed=1  0.0min
+  done tdma L=1000 nll=None seed=3  0.0min
+  done tdma L=1000 nll=None seed=5  0.1min
+  done tdma L=1000 nll=None seed=4  0.1min
+  done tdma L=1000 nll=None seed=6  0.1min
+  done tdma L=1000 nll=None seed=7  0.1min
+  done tdma L=800 nll=20 seed=1  0.1min
+  done tdma L=800 nll=20 seed=0  0.1min
+  done tdma L=800 nll=20 seed=2  0.1min
+  done tdma L=800 nll=20 seed=3  0.1min
+  done tdma L=800 nll=20 seed=5  0.2min
+  done tdma L=800 nll=20 seed=4  0.2min
+  done tdma L=800 nll=20 seed=6  0.2min
+  done tdma L=800 nll=20 seed=7  0.2min
+  done group L=1000 nll=None seed=0  0.2min
+  done group L=1000 nll=None seed=1  0.2min
+  done group L=1000 nll=None seed=2  0.2min
+  done group L=1000 nll=None seed=3  0.2min
+  done group L=1000 nll=None seed=5  0.2min
+  done group L=1000 nll=None seed=6  0.3min
+  done group L=1000 nll=None seed=4  0.3min
+  done group L=1000 nll=None seed=7  0.3min
+  done group L=800 nll=20 seed=0  0.3min
+  done group L=800 nll=20 seed=1  0.3min
+  done group L=800 nll=20 seed=2  0.3min
+  done group L=800 nll=20 seed=3  0.3min
+  done group L=800 nll=20 seed=5  0.3min
+  done group L=800 nll=20 seed=4  0.3min
+  done group L=800 nll=20 seed=6  0.3min
+  done group L=800 nll=20 seed=7  0.3min
+('group', 800.0, 20): n=8 tp=775.5 lat_ll=7.56 loss_ll=6.45 lat_all=27.1 loss_all=3.1 case0/1/2=0.41/0.39/0.20
+('tdma', 800.0, 20): n=8 tp=708.5 lat_ll=7.09 loss_ll=4.05 lat_all=40.3 loss_all=11.7 case0/1/2=0.45/0.38/0.16
+('group', 1000.0, None): n=8 tp=847.0 lat_ll=7.10 loss_ll=2.93 lat_all=73.1 loss_all=15.6 case0/1/2=0.62/0.31/0.07
+('tdma', 1000.0, None): n=8 tp=819.5 lat_ll=6.67 loss_ll=0.51 lat_all=70.3 loss_all=18.4 case0/1/2=0.64/0.30/0.06
