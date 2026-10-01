@@ -54,7 +54,7 @@ bullets(s,[
  [0,'특징'],
  [1,'그룹 = 서로 가까운 BSS(AP + 소속 STA) 묶음 → 그룹 간 간섭이 작아 동시 전송(Co-SR)에 유리'],
  [1,'그룹 구성은 배치 동안 고정. 트래픽 특성은 그룹화에 쓰지 않음 (부하 순서만 사용)'],
- [1,'12 AP 배치 100회 기준 평균 5.2개 그룹 (최소 3, 최대 8)'],
+ [1,'80 m × 80 m에 AP 20대 랜덤 배치, 100회 기준 평균 5.2개 그룹 (최소 3, 최대 8)'],
  [0,'특허 관점'],
  [1,'Master AP → AP: 그룹 ID, center AP 여부를 통지해야 함 (MAPC Negotiation / Notification)'],
 ],0.55,1.45,6.4,5.5);
@@ -101,7 +101,7 @@ s.addText('→ 그룹 ID · 동작 모드 · 슬롯 순번이 제안에서 새�
 
 // ───────── 5. 결과 요약 ─────────
 s=pres.addSlide(); header(s,'00','제안 모델 (TAG-ST) 상세');
-band(s,'실험 결과 요약 (12 AP, 100회 평균, 총 부하 1000 Mbps)',0.95);
+band(s,'실험 결과 요약 (80 m × 80 m, AP 20대 · STA 40대, 100회 평균, 총 부하 1000 Mbps)',0.95);
 s.addImage({path:'fig7.png',x:0.4,y:1.45,w:4.15,h:2.37}); cap(s,'Throughput',0.4,3.83,4.15);
 s.addImage({path:'fig8.png',x:4.6,y:1.45,w:4.15,h:2.37}); cap(s,'Latency (latency-sensitive)',4.6,3.83,4.15);
 s.addImage({path:'fig9.png',x:8.8,y:1.45,w:4.15,h:2.37}); cap(s,'Packet loss ratio (latency-sensitive)',8.8,3.83,4.15);
