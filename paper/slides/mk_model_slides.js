@@ -32,10 +32,10 @@ bullets(s,[
  [0,'구성 요소'],
  [1,'Master AP: 그룹화·협력 방식·슬롯·전력을 결정하는 조정 AP (sharing AP 역할)'],
  [1,'AP(BSS): 자기 STA를 서비스, Master AP의 트리거에 따라 전송'],
- [1,'STA: 트래픽 종류(저지연 / 일반)를 가짐. 저지연 STA를 서비스하는 AP = "저지연 서비스 AP"'],
+ [1,'STA: 트래픽 종류(저지연 / 일반)를 가진 수신 단말. 저지연 STA의 위치가 전송 방식 결정의 근거'],
  [0,'동작 구조 (2단계)'],
- [1,'① 초기화: Master AP가 AP 간 RSSI로 BSS를 그룹화 (배치 동안 고정)'],
- [1,'② TXOP마다: 저지연 트래픽 분포 관측 → 협력 방식 결정 → ML로 슬롯·전력 결정 → 협력 전송'],
+ [1,'① 초기화: Master AP가 AP 간 RSSI로 가까운 BSS(AP + 소속 STA)끼리 그룹화 (배치 동안 고정)'],
+ [1,'② TXOP마다: 저지연 STA가 어느 그룹에 있는지 관측 → 협력 방식 결정 → ML로 슬롯·전력 결정 → 협력 전송'],
  [0,'하향링크만 고려, 저지연 트래픽 하나만 특성으로 사용'],
 ],0.55,1.45,7.0,5.5);
 s.addImage({path:'fig2.png',x:7.9,y:1.45,w:5.1,h:4.64});
@@ -52,7 +52,7 @@ bullets(s,[
  [1,'기존 center AP들로부터의 RSSI가 모두 임계값(−70 dBm) 미만이면 새 center AP로 채택'],
  [1,'center가 아닌 AP는 RSSI가 가장 큰 center AP의 그룹에 합류, 소속 STA는 자기 AP를 따름'],
  [0,'특징'],
- [1,'그룹 = 서로 가까운 BSS 묶음 → 그룹 간 간섭이 작아 동시 전송(Co-SR)에 유리'],
+ [1,'그룹 = 서로 가까운 BSS(AP + 소속 STA) 묶음 → 그룹 간 간섭이 작아 동시 전송(Co-SR)에 유리'],
  [1,'그룹 구성은 배치 동안 고정. 트래픽 특성은 그룹화에 쓰지 않음 (부하 순서만 사용)'],
  [1,'12 AP 배치 100회 기준 평균 5.2개 그룹 (최소 3, 최대 8)'],
  [0,'특허 관점'],
@@ -63,13 +63,13 @@ cap(s,'(a) 초기 BSS 배치  →  (b) RSSI 기반 그룹화 (center AP 표시)'
 
 // ───────── 3. TXOP 협력 방식 ─────────
 s=pres.addSlide(); header(s,'00','제안 모델 (TAG-ST) 상세');
-band(s,'②  TXOP마다: 저지연 트래픽 분포 관측 → 협력 방식 결정',0.95);
+band(s,'②  TXOP마다: 저지연 STA 위치 관측 → 협력 방식 결정',0.95);
 bullets(s,[
- [0,'관측: Master AP가 TXOP 획득(EDCA) 후 ICF 전송, 각 AP는 ICR로 "저지연 큐 보유 여부·큐 상태" 응답'],
+ [0,'관측: Master AP가 TXOP 획득(EDCA) 후 ICF 전송, 각 AP는 ICR로 "보낼 데이터가 있는 저지연 STA 유무·큐 상태" 응답'],
  [0,'판정 (STA 기준, 매 TXOP 반복)'],
  [1,'저지연 STA 없음 → 모든 그룹 동시 전송 (Co-SR)'],
- [1,'저지연 서비스 AP가 여러 그룹에 분산 (Distributed) → Priority slot: 저지연 서비스 AP만 전송 (다른 그룹끼리 동시, 같은 그룹은 순번), 나머지 AP는 대기 → Shared slot: 전원 Co-SR'],
- [1,'저지연 서비스 AP가 한 그룹에 집중 (Concentrated) → 그 그룹은 TXOP 전체를 AP별 순차 전송 (Co-TDMA), 다른 그룹은 Co-SR'],
+ [1,'저지연 STA가 여러 그룹에 흩어져 있음 (Distributed) → Priority slot: 저지연 STA 앞으로 가는 데이터만 먼저 전송 (다른 그룹끼리 동시, 같은 그룹은 순번), 나머지 AP는 대기 → Shared slot: 전원 Co-SR'],
+ [1,'저지연 STA가 한 그룹에 몰려 있음 (Concentrated) → 그 그룹은 저지연 STA 앞으로 가는 데이터부터 AP별 순차 전송 (Co-TDMA), 다른 그룹은 Co-SR'],
  [0,'그룹 안 전송 순서: AC 우선순위 → 큐 길이 → 대기 시간'],
 ],0.55,1.45,12.3,2.6);
 s.addImage({path:'s2_image2.png',x:0.55,y:4.15,w:6.15,h:1.8});  cap(s,'Distributed traffic mode',0.55,5.98,6.15);
@@ -82,7 +82,7 @@ bullets(s,[
  [0,'결정 변수 (Master AP, TXOP마다)'],
  [1,'Priority slot 시간 비율 (0.1–0.9),  슬롯 수 (1–5),  그룹 송신 전력 (6 / 12 / 24 dBm)'],
  [0,'학습'],
- [1,'입력: 그룹 구성, 저지연 서비스 AP, 큐 상태 / 보상: 저지연 패킷 전달률 + 전체 전달률'],
+ [1,'입력: 그룹 구성, 저지연 STA 위치, 큐 상태 / 보상: 저지연 패킷 전달률 + 전체 전달률'],
  [1,'사전 데이터 없이 온라인 학습 (UCB1), 그룹 구성별로 별도 에이전트'],
 ],0.55,1.45,12.3,1.75);
 const th={bold:true,fill:{color:'D9D9D9'},fontFace:F,fontSize:11.5,align:'center',valign:'middle'};
@@ -91,7 +91,7 @@ const tdc=Object.assign({},td,{align:'center'});
 const rows=[
  [{text:'단계',options:th},{text:'필요한 정보',options:th},{text:'방향',options:th},{text:'전달 프레임 / 필드 (Draft 기준 후보)',options:th}],
  [{text:'① 그룹화',options:tdc},{text:'그룹 ID, center AP 여부',options:td},{text:'Master → AP',options:tdc},{text:'MAPC Negotiation / Notification (Action frame, MAPC element)',options:td}],
- [{text:'② 관측',options:tdc},{text:'저지연 큐 보유 여부, 큐 상태',options:td},{text:'AP → Master',options:tdc},{text:'ICR (기존 Co-TDMA 폴링 응답)',options:td}],
+ [{text:'② 관측',options:tdc},{text:'보낼 데이터가 있는 저지연 STA 유무, 큐 상태',options:td},{text:'AP → Master',options:tdc},{text:'ICR (기존 Co-TDMA 폴링 응답)',options:td}],
  [{text:'② 협력 방식',options:tdc},{text:'동작 모드 (Co-SR / Distributed / Concentrated)',options:td},{text:'Master → AP',options:tdc},{text:'Trigger frame · MAPC User Info: Operation Mode',options:td}],
  [{text:'③ 슬롯',options:tdc},{text:'슬롯 순번, 슬롯 길이(비율)',options:td},{text:'Master → AP',options:tdc},{text:'Trigger frame · MAPC User Info: Slot Index',options:td}],
  [{text:'③ 전력',options:tdc},{text:'그룹 송신 전력 상한',options:td},{text:'Master → AP',options:tdc},{text:'Trigger frame · MAPC User Info: TX Power Limit (기존 필드)',options:td}],
