@@ -1018,6 +1018,8 @@ def simulate(model, seed, n_ap=12, n_sta=2, k=None, ll_ratio=0.3,
         loss_retry_ll=s_ll['retry'], loss_dead_ll=s_ll['dead'],
         n_ll=len(ll_sta), n_ll_ap=int(is_ll.sum()), offered=sum(offered.values()), n_groups=len(clusters),
         offered_ll=sum(src[j].offered_mbps() for j in ll_sta),
+        tp_ll=sum(q[j].tp_bits for j in ll_sta) / eval_dur / 1e6,      # 저지연 STA 앞 패킷만의 처리량 (10/1)
+        tp_be=sum(q[j].tp_bits for j in be_sta) / eval_dur / 1e6,
         g_ll0=float(gs[0]), g_ll1=float(gs[1]), g_ll2=float(gs[2]),   # 평가 구간 TXOP×그룹 중 저지연 STA 0/1/2+ 비율
     )
 
@@ -1352,6 +1354,8 @@ def simulate_mab(seed, reward='cls', sim_dur=5.0, train_frac=0.6, **kw):
                 loss_retry_ll=s_ll['retry'], loss_dead_ll=s_ll['dead'],
                 n_ll=len(ll_sta), n_ll_ap=int(sum(is_ll_ap)), offered=sum(offered.values()), n_groups=len(clusters),
                 offered_ll=sum(src[j].offered_mbps() for j in ll_sta),
+                tp_ll=sum(q[j].tp_bits for j in ll_sta) / eval_dur / 1e6,
+                tp_be=sum(q[j].tp_bits for j in be_sta) / eval_dur / 1e6,
                 g_ll0=float(gs[0]), g_ll1=float(gs[1]), g_ll2=float(gs[2]),
                 reward_log=reward_log, pw_agents=pw_agents, sl_agents=sl_agents)
 
@@ -1372,7 +1376,7 @@ LOAD_PER_AP = 100.0                # AP 수 실험에서 AP 당 부하 (Mbps)
 AP_COUNTS = [5, 10, 15, 20, 25, 30]
 LL_RATIO = 0.25            # (미사용. 실제 배정은 P_LL) 호출부 호환용
 EXTRA_KEYS = ['lat_be', 'loss_retry', 'loss_dead', 'loss_retry_ll', 'loss_dead_ll',
-              'n_ll', 'n_ll_ap', 'offered', 'offered_ll', 'n_groups', 'g_ll0', 'g_ll1', 'g_ll2']   # 그래프 외 진단값
+              'n_ll', 'n_ll_ap', 'offered', 'offered_ll', 'tp_ll', 'tp_be', 'n_groups', 'g_ll0', 'g_ll1', 'g_ll2']   # 그래프 외 진단값
 N_TRIAL = 8
 LOADS = [400, 500, 600, 700, 800, 900, 1000]   # Mbps, 100 간격 (9/10 결정). 하한 400 = 저지연 고정 부하 최대(~330) 보다 위
 
