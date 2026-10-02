@@ -23,7 +23,7 @@ except ImportError:
     import mapc as M
 
 KW = dict(n_ap=M.N_AP, n_sta=M.N_STA, k=M.K, ll_ratio=M.LL_RATIO, area=M.AREA, d_sta=M.D_STA)
-KEYS = [p[0] for p in M.PANELS] + M.EXTRA_KEYS
+KEYS = list(dict.fromkeys([p[0] for p in M.PANELS] + M.EXTRA_KEYS))   # 중복 제거
 
 
 def apply_settings(cfg):
@@ -81,6 +81,7 @@ if __name__ == '__main__':
     ap.add_argument('--n', type=int, default=100)
     ap.add_argument('--workers', type=int, default=cpu_count())
     ap.add_argument('--ll', action='store_true')
+    ap.add_argument('--no-plot', action='store_true', help='그림 저장 생략 (표만 출력)')
     ap.add_argument('--tdma', choices=['lee', 'lee-equal', 'equal'], default=M.TDMA_SCHED)
     ap.add_argument('--tdma-share', type=int, default=M.TDMA_MAX_SHARE)
     ap.add_argument('--csma', choices=['edca', 'dcf'], default='edca' if M.CSMA_EDCA else 'dcf')
@@ -90,11 +91,21 @@ if __name__ == '__main__':
                 CSMA_STD_TXOP_LIMIT=M.CSMA_STD_TXOP_LIMIT, TDMA_SCHED=cfg['tdma_sched'], TDMA_MAX_SHARE=cfg['tdma_max_share'],
                 T_EDCA_ACCESS_us=M.T_EDCA_ACCESS * 1e6, LL_INTRA=M.LL_INTRA, CENTER_SEP_DBM=M.CENTER_SEP_DBM)
     R, CI = run('load', a.n, a.workers, cfg)
-    M.print_tables(R, M.LOADS); M.plot(R, M.LOADS)
-    json.dump(dict(loads=M.LOADS, results=R, ci95=CI, **meta), open('results.json', 'w'), indent=1)
-    print('results.json, fig_*.png 저장')
+    json.dump(dict(loads=M.LOADS, results=R, ci95=CI, **meta), open('results.json', 'w'), indent=1)   # 표·그림보다 먼저 저장
+    M.print_tables(R, M.LOADS)
+    if not a.no_plot:
+        try:
+            M.plot(R, M.LOADS)
+        except Exception as e:
+            print('[그림 생략]', e)
+    print('results.json 저장')
     if a.ll:
         R2, CI2 = run('ll', a.n, a.workers, cfg)
-        M.print_ll_tables(R2); M.plot_ll(R2)
         json.dump(dict(ratios=M.LL_RATIOS, results=R2, ci95=CI2, **meta), open('results_ll.json', 'w'), indent=1)
-        print('results_ll.json, fig_ll_*.png 저장')
+        M.print_ll_tables(R2)
+        if not a.no_plot:
+            try:
+                M.plot_ll(R2)
+            except Exception as e:
+                print('[그림 생략]', e)
+        print('results_ll.json 저장')
