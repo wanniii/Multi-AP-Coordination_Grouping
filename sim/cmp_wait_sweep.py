@@ -4,7 +4,7 @@ import time, json, sys
 from multiprocessing import Pool
 import numpy as np
 import mapc_grouping_HMAB_v1_9 as M
-KEYS = ['tp','lat_ll','loss_ll','lat','loss','g_ll0','g_ll1','g_ll2']
+KEYS = ['tp','tp_ll','tp_be','offered_ll','lat_ll','loss_ll','lat','loss','g_ll0','g_ll1','g_ll2']
 LOADS  = [400,500,600,700,800,900,1000]
 RATIOS = [0.10,0.15,0.20,0.25,0.30,0.35,0.40,0.45,0.50]
 def one(task):
