@@ -140,6 +140,7 @@ RL vs Co-TDMA: 처리량 +20.6%, 지연 −14.1%, 손실 −64.8%. RL vs Co-SR: 
 - 지연·손실 정의를 LS 트래픽으로 한정.
 - Table 3 Background 행 값·단위 확인. 결론 6.57/7.27 ms vs 본문 6.6/7.3 통일. "8080 영역" → 80 m × 80 m.
 - STA 약자 풀이(초록, 본문 첫 등장), Table 3 AC 풀이.
+- Distributed mode 그림(A·B·C가 그룹마다 한 개인 경우): 코드는 priority 라운드 하나를 모든 AP가 같은 길이로 쓰고 shared도 같은 시점에 시작한다 (`simulate_mab`의 `dur = data_time * frac` 가 라운드 공통). 현재 그림은 A·B·C 길이와 shared 시작점이 그룹마다 달라 코드와 어긋남 → A·B·C를 같은 폭으로, shared 경계를 한 선으로 맞출 것. (10/2 확인)
 - 참고문헌: `paper/References_MobiSec_format.docx` 참조. DOI 미확인 4편(Geraci, Nunez 2025, Yu, Lee GLOBECOM), Xplore URL 대체 4편, 802.11 문서 저자 전원 기재.
 
 ---
