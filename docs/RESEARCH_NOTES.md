@@ -24,9 +24,9 @@ Master AP가 (1) 인접 AP의 RSSI로 BSS를 그룹화하고, (2) TXOP마다 lat
 
 **② TXOP마다 협력 전송 구조 결정** (`rounds_proposed`)
 - TXOP 시작 시 ICF/ICR로 각 AP의 데이터 유무와 LS 큐 유무를 수집.
-- LS 없음(약 54%): 활성 그룹 전원 Co-SR (= Co-SR과 동일).
-- Distributed traffic mode(약 32%): priority slot에 LS 서비스 AP가 먼저 전송. 다른 그룹끼리 동시(Co-SR), 같은 그룹 안 둘 이상이면 순서대로(Co-TDMA). LS 없는 그룹·전송 끝난 그룹은 대기. 이후 shared slot에 전원 Co-SR.
-- Concentrated traffic mode(약 15%): LS가 몰린 그룹은 TXOP 전체를 Co-TDMA, 나머지 그룹은 동시에 Co-SR.
+- LS 없음: 활성 그룹 전원 Co-SR (= Co-SR과 동일). ※ TXOP 단위 비율은 배치에 따라 1~35% (seed 0~2, 600·1000 Mbps 실측, 10/2). 이전에 적힌 54%는 (TXOP×그룹) 단위 통계(g_ll0 = 64.6%)를 잘못 옮긴 것.
+- Distributed traffic mode(TXOP의 64~95%): priority slot에 LS 서비스 AP가 먼저 전송. 다른 그룹끼리 동시(Co-SR), 같은 그룹 안 둘 이상이면 순서대로(Co-TDMA). LS 없는 그룹·전송 끝난 그룹은 대기. 이후 shared slot에 전원 Co-SR.
+- Concentrated traffic mode(TXOP의 1~5%): LS가 몰린 그룹은 TXOP 전체를 Co-TDMA, 나머지 그룹은 동시에 Co-SR.
 - Priority slot은 LS 트래픽이 있는 AP에만 배정되므로 슬롯 낭비 없음 (교수님 8/19 지적 대응).
 
 **③ RL(H-MAB) 자원 조정** (Wojnar et al. 구조 차용, 학습 대상 변경)
