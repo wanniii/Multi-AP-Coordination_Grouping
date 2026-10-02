@@ -1409,6 +1409,7 @@ PANELS = [
     ('loss',    'Packet loss ratio, all traffic (%)',           'loss'),
     ('lat_ll',  'Mean latency of low-latency traffic (ms)',     'latency_ll'),
     ('loss_ll', 'Packet loss ratio of low-latency traffic (%)', 'loss_ll'),
+    ('tp_ll',   'Throughput of low-latency traffic (Mbps)',       'throughput_ll'),   # v2.0: 교수님 10/1 요청
 ]
 
 PLOT_MODELS_LL = [lab for _, lab, *_ in MODELS]
