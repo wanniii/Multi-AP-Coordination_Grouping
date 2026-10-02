@@ -544,6 +544,7 @@ TDMA_MAX_SHARE = None      # Co-TDMA: 한 TXOP 를 나눠 갖는 AP 수 상한. 
                            #   대상은 라운드 로빈, sharing AP 가 먼저 보낸다. 활성 AP 20 대를 한 TXOP 에 모두 넣으면 슬롯당 제어
                            #   오버헤드(T_ROUND_OH 135 us)가 데이터 시간과 맞먹으므로 (9/12 실측: 298 → 508 Mbps @700) K 를 제한한다.
 LL_INTRA = 'tdma'          # 저지연 서비스 AP 가 2 대 이상인 그룹이 둘 이상인 혼합 상황의 처리 (9/10 PPT 논의사항)
+                           #   'tdma' = 논문(wait) · 'group-wait' = 저지연 없는 그룹만 대기 (10/2) · 'group' = no-wait
                            #   'tdma' = ② Case 1 로 보되 각 저지연 그룹 안은 c-TDMA, 저지연 슬롯 동안 나머지 AP 대기  ← 확정 (9/11)
                            #   'group'= ③ Case 2 로 처리 (비교용). 순수 Case 1 · Case 2 는 두 설정에서 동일하게 동작.
 
@@ -605,11 +606,17 @@ def rounds_proposed(clusters, prio_of, active, rank_of=None):
     # ── Case 1: 저지연 슬롯(저지연 서비스 AP 만) → 마지막 슬롯(전원 shared) ──
     out = []
     if ll_all:
-        if LL_INTRA == 'tdma':          # ② 같은 그룹 저지연 AP 끼리는 순번, 다른 그룹끼리는 동시
+        if LL_INTRA in ('tdma', 'group-wait'):   # ② 같은 그룹 저지연 AP 끼리는 순번, 다른 그룹끼리는 동시
             n_r = max(len(v) for v in ll_by_c.values())
             for r in range(n_r):
                 prio = {ll_by_c[c][r]: prio_of[ll_by_c[c][r]][0] for c in cids if r < len(ll_by_c[c])}
-                out.append(rd(prio, []))
+                shared = []
+                if LL_INTRA == 'group-wait':
+                    # 'group-wait' (10/2): priority 구간은 "저지연이 있는 그룹"의 것. 저지연 전송을 모두 마친 그룹은
+                    #   그 라운드부터 자기 모든 활성 AP 가 shared 처럼 전송한다 (저지연 서비스 AP 의 나머지 STA 포함).
+                    #   저지연이 없는 그룹만 마지막 shared 라운드까지 대기한다.
+                    shared = [a for c in groups_with_ll if r >= len(ll_by_c[c]) for a in act[c]]
+                out.append(rd(prio, shared))
         else:                           # 저지연 서비스 AP 전원이 한 슬롯에 동시
             out.append(rd({a: prio_of[a][0] for a in ll_all}, []))
     if any(act.values()):

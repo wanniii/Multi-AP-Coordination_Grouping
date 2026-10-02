@@ -36,7 +36,7 @@ def timeline(ax,title,rows,bounds,round_names,note):
     ax.text(bounds[-1]/2,-1.15,'TXOP',ha='center',va='top',fontsize=11)
     ax.text(0.6+0.25,ym+0.55,'trigger',ha='center',va='bottom',fontsize=8.5,color='#333333')
 
-fig,axs=plt.subplots(3,1,figsize=(12,10.5))
+fig,axs=plt.subplots(4,1,figsize=(12,14))
 S=1.2   # data start
 
 # (1) Distributed, one LS STA per group: A(G1) B(G2) C(G3)  → round 1 (priority) + round 2 (shared)
@@ -57,14 +57,24 @@ timeline(axs[1],'(2) Distributed mode (wait) — G1 none, A in G2, B·C in G3   
   b2,['round 1: priority','round 2: priority','round 3: shared'],
   '저지연 전송이 없는 AP는 priority 라운드 동안 대기')
 
-# (3) Extended, no-wait: G3 = TDMA group (B round, C round); G1, G2 shared in every round; no separate shared round
+# (2b) Extended, group-wait: groups with LS own the priority rounds; a group that finished its LS goes shared; LS-free group waits
+b2b=[S,4.6,8.0,13.0]
+timeline(axs[2],"(2b) Distributed mode (group-wait) — 같은 상황   [코드 LL_INTRA='group-wait', 10/2 추가]",
+  [('G1',[(S,8.0,'wait','wait'),(8.0,13.0,'all STAs in G1','shared')]),
+   ('G2',[(S,4.6,'→ A','prio'),(4.6,8.0,'other STAs in G2 (all APs of G2)','shared'),(8.0,13.0,'other STAs in G2','shared')]),
+   ('G3',[(S,4.6,'→ B','prio'),(4.6,8.0,'→ C','prio'),(8.0,13.0,'other STAs in G3','shared')])],
+  b2b,['round 1: priority','round 2: priority','round 3: shared'],
+  '저지연을 다 보낸 그룹(G2)은 그 라운드부터 shared처럼. 저지연 없는 G1만 대기')
+# (3) Extended, no-wait: LS groups (G2, G3) are TDMA groups (one AP per round, LS APs first); LS-free G1 shared throughout; no final shared round
 b3=[S,7.0,13.0]
-timeline(axs[2],'(3) Distributed mode (no-wait) — 같은 상황   [코드 LL_INTRA=\'group\']',
+timeline(axs[3],"(3) Distributed mode (no-wait) — 같은 상황   [코드 LL_INTRA='group']",
   [('G1',[(S,13.0,'all STAs in G1','shared')]),
-   ('G2',[(S,3.6,'→ A','prio'),(3.6,13.0,'other STAs in G2','shared')]),
+   ('G2',[(S,7.0,'→ A  (AP of A)','prio'),(7.0,13.0,'STAs of the other AP in G2','shared')]),
    ('G3',[(S,7.0,'→ B','prio'),(7.0,13.0,'→ C','prio')])],
-  b3,['round 1: B (G3) ‖ G1·G2 shared','round 2: C (G3) ‖ G1·G2 shared'],
-  'G3만 순차(Co-TDMA), G1·G2는 처음부터 전송. G2의 A는 shared 안에서 먼저 나감')
+  b3,['round 1','round 2'],
+  '저지연 있는 그룹(G2·G3)은 AP 하나씩 차례로, 저지연 없는 G1은 처음부터 전송. 별도 shared 라운드 없음')
+axs[3].text(S,-1.55,'※ A·B·C를 서비스하는 AP의 나머지 STA는 이 TXOP에서 서비스되지 않음. G2에 AP가 하나뿐이면 G2는 2라운드에 대기',
+            fontsize=9.5,color='#333333',fontfamily='sans-serif',va='top')
 # legend
 h=[Rectangle((0,0),1,1,fc=C['icf'],ec='black'),Rectangle((0,0),1,1,fc=C['icr'],ec='black'),
    Rectangle((0,0),1,1,fc=C['prio'],ec='black'),Rectangle((0,0),1,1,fc=C['shared'],ec='black'),
