@@ -63,7 +63,7 @@ MobiSec 2026 논문(v1.2, 한글 본문) + 표준 특허 준비 중. 이후 이 
 | `'group-wait'` (v2.0 기본, 10/2 추가) | priority 끝까지 대기 | 그 라운드부터 모든 AP가 shared처럼 전송 | **설계 의도**: priority는 "저지연이 있는 그룹"의 것 |
 | `'group'` **no-wait** | 처음부터 전송 | 저지연 있는 그룹은 AP 하나씩 TDMA(저지연 AP 먼저), shared 라운드 없음 | |
 
-8 seed 비교: group-wait ≈ wait (오차 안), 둘 다 no-wait와 구분됨. → 논문 수치(wait)는 유지해도 되고, 설계 설명·그림은 group-wait로 써도 모순 없음.
+8 seed 비교: group-wait ≈ wait (오차 안), 둘 다 no-wait와 구분됨. **100 seed 확인(10/11)**: group-wait RL 1000 Mbps 772.6 / 6.55 ms / 0.93 %, LS 50 % 700.8 / 7.11 / 3.11 → wait(770.5 / 6.59 / 1.18, 687.6 / 7.28 / 2.85)와 동일 범위. 파일 `results/groupwait_100seeds_1000Mbps_LS50.json`. → 논문 수치(wait)는 유지해도 되고, 설계 설명·그림은 group-wait로 써도 모순 없음.
 v2.0으로 100회 재실험 예정(사용자 PC, `run_parallel_v2_0.py --n 100 --ll --workers 14`).
 
 ### 4.4 슬롯·전력 결정: 계층형 MAB (UCB1)
